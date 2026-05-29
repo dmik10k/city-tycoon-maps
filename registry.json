@@ -7,7 +7,8 @@
       "width": 200,
       "height": 200,
       "file": "maps/small.json",
-      "description": "A coastal trading city with industrial harbor district"
+      "description": "A coastal trading city with industrial harbor district",
+"levelRequired": 20
     },
     {
       "id": "road4",
@@ -16,7 +17,8 @@
       "width": 200,
       "height": 200,
       "file": "maps/road4.json",
-      "description": "A coastal trading city with industrial harbor district"
+      "description": "A coastal trading city with industrial harbor district",
+"levelRequired": 30
     },
     {
       "id": "small_beginner_380368",
@@ -25,7 +27,8 @@
       "width": 200,
       "height": 200,
       "file": "maps/small_beginner_380368.json",
-      "description": "A coastal trading city with industrial harbor district"
+      "description": "A coastal trading city with industrial harbor district",
+"levelRequired": 1
     }
   ]
 }
