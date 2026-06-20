@@ -7,8 +7,22 @@
       "version": 1,
       "width": 600,
       "height": 600,
+      "entranceX": 300,
+      "entranceY": 300,
       "file": "maps/starter map.json",
       "description": "A coastal trading city with industrial harbor district"
+    },
+    {
+      "id": "Tel Aviv",
+      "name": "Tel Aviv",
+      "levelRequired": 1,
+      "version": 1,
+      "width": 400,
+      "height": 400,
+      "entranceX": 300,
+      "entranceY": 300,
+      "file": "maps/Tel Aviv.json",
+      "description": "Tel Aviv, officially Tel Aviv-Yafo, and also known as Tel Aviv-Jaffa, is the most populous city in the Gush Dan metropolitan area of Israel"
     }
   ]
 }
