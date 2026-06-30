@@ -23,6 +23,7 @@
       "entranceY": 374,
       "file": "maps/Tel Aviv.json",
       "description": "Tel Aviv, officially Tel Aviv-Yafo, and also known as Tel Aviv-Jaffa, is the most populous city in the Gush Dan metropolitan area of Israel"
-    }
+    },
+    { "id": "all-sizes", "name": "All Sizes", "file": "maps/all-sizes.json", "version": 1, "hidden": true }
   ]
 }
