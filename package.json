@@ -1,0 +1,7 @@
+{
+  "name": "city-tycoon-content-cdn",
+  "private": true,
+  "scripts": {
+    "test": "node tests/assets.test.js"
+  }
+}
