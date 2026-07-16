@@ -32,8 +32,8 @@
       "version": 1,
       "width": 250,
       "height": 250,
-      "entranceX": 196,
-      "entranceY": 374,
+      "entranceX": 50,
+      "entranceY": 50,
       "file": "maps/minimalistic.json",
       "description": "Small city with all possible companies"
     }
