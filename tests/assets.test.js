@@ -36,7 +36,7 @@ const families = [
     ['buildings/walls_lit', '.webp', 96],
     ['tutorial', '.png', 9],
     ['tutorial', '.webp', 9],
-    ['creatures', '.webp', 25],
+    ['creatures', '.webp', 26],
 ];
 
 for (const [dir, extension, expected] of families) {
