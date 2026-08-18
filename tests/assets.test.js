@@ -36,7 +36,7 @@ const families = [
     ['buildings/walls_lit', '.webp', 96],
     ['tutorial', '.png', 9],
     ['tutorial', '.webp', 9],
-    ['creatures', '.webp', 26],
+    ['creatures', '.webp', 30],
 ];
 
 for (const [dir, extension, expected] of families) {
@@ -76,4 +76,4 @@ for (const file of [
     'branding/mint-street-logo.png',
 ]) assertImage(file);
 
-console.log('✓ CDN assets: 577 valid images (incl. 193 company thumbs + 9 tutorial WebP)');
+console.log('✓ CDN assets: 582 valid images (incl. 193 company thumbs + 9 tutorial WebP)');
