@@ -37,12 +37,25 @@ const families = [
     ['tutorial', '.png', 9],
     ['tutorial', '.webp', 9],
     ['creatures', '.webp', 30],
+    // The adult company-card header's R&D risk ladder, one icon per tier (0/25/50/75/100).
+    // The GAME draws these inline as SVG (world_of_monopoly RiskIcon.jsx) — this raster set is
+    // a derived copy for anything that cannot inline vector art, generated from that component's
+    // own paths and TIER_META colors so the two can never disagree.
+    ['risk', '.webp', 5],
+    // The Street's three player classes, as characters. Two crops of one generation, the
+    // same way a company ships an image and a thumb: the full figure is the class PICKER, the
+    // face is the 32-48px avatar on a rival's address card and in the news feed. The small one
+    // is a re-CROP, not a re-scale — a waist-up portrait shrunk to a news row leaves a 10px face.
+    ['street/classes', '.webp', 3],
+    ['street/classes/face', '.webp', 3],
 ];
 
+let verified = 0;
 for (const [dir, extension, expected] of families) {
     const familyFiles = files(dir, extension);
     assert.strictEqual(familyFiles.length, expected, `${dir} should contain ${expected} ${extension} files`);
     for (const file of familyFiles) assertImage(`${dir}/${file}`);
+    verified += familyFiles.length;
 }
 
 // Derived variants must stay 1:1 with their sources — the game builds a thumb URL
@@ -54,6 +67,15 @@ assert.deepStrictEqual(
     companyIds,
     'every company image needs a matching thumb — run scripts/genDerivedAssets.py',
 );
+// A class with no face is a broken avatar, not a fallback — the card builds the face URL
+// from the class id alone. (Counts above stay at the number actually shipped; this is the
+// invariant that must hold at every count.)
+assert.deepStrictEqual(
+    files('street/classes/face', '.webp'),
+    files('street/classes', '.webp'),
+    'every street class portrait needs a matching face crop',
+);
+
 assert.deepStrictEqual(
     files('tutorial', '.webp'),
     files('tutorial', '.png').map(file => file.replace(/\.png$/, '.webp')),
@@ -74,6 +96,8 @@ for (const file of [
     'branding/favicon-32x32.png',
     'branding/favicon.ico',
     'branding/mint-street-logo.png',
-]) assertImage(file);
+]) { assertImage(file); verified++; }
 
-console.log('✓ CDN assets: 582 valid images (incl. 193 company thumbs + 9 tutorial WebP)');
+// COUNTED, never written down. The literal that used to live here said 582 while the
+// directories held more, because nothing recomputes a number a human typed once.
+console.log(`✓ CDN assets: ${verified} valid images across ${families.length} families + branding`);
