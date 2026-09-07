@@ -1,0 +1,52 @@
+{
+  "generatedAt": "2026-09-07T13:19:40.933Z",
+  "ceiling": 30,
+  "baseSteps": 4,
+  "maps": [
+    {
+      "mapKey": "all-sizes",
+      "file": "all-sizes.json",
+      "maxSteps": 30,
+      "metresPerCell": 7.5,
+      "claimable": 52,
+      "pairs": 107,
+      "sha256": "bfcfccf1fe33b51bfca1f5fb7898257b29a39b538cd5a0ef658484efa9245c55"
+    },
+    {
+      "mapKey": "intro",
+      "file": "intro.json",
+      "maxSteps": 30,
+      "metresPerCell": 7.5,
+      "claimable": 858,
+      "pairs": 16909,
+      "sha256": "c9d2102e01ee3fa0f6026ad6ce8bb924b3fa0a38e79ce9e226de849a610765ac"
+    },
+    {
+      "mapKey": "minimalistic",
+      "file": "minimalistic.json",
+      "maxSteps": 30,
+      "metresPerCell": 7.5,
+      "claimable": 52,
+      "pairs": 107,
+      "sha256": "6aff72003fd825f40132e3ba4692381e010b0460eba6c7d735add30bf8a5efcb"
+    },
+    {
+      "mapKey": "starter map",
+      "file": "starter map.json",
+      "maxSteps": 30,
+      "metresPerCell": 7.5,
+      "claimable": 858,
+      "pairs": 16909,
+      "sha256": "cc2502d97e5d31131a0e7fea1d5352782a43d273801d0dfbc74ba1d382167dd4"
+    },
+    {
+      "mapKey": "Tel Aviv",
+      "file": "Tel Aviv.json",
+      "maxSteps": 30,
+      "metresPerCell": 7.5,
+      "claimable": 396,
+      "pairs": 3590,
+      "sha256": "0e3839a37d4da3c40356a641b626227d0d5ca1417d782e99cb1af67d23b0503f"
+    }
+  ]
+}
