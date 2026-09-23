@@ -48,6 +48,12 @@ const families = [
     // is a re-CROP, not a re-scale — a waist-up portrait shrunk to a news row leaves a 10px face.
     ['street/classes', '.webp', 3],
     ['street/classes/face', '.webp', 3],
+    // The Street's action art: one picture per action (tiles, confirm sheet, Record chips).
+    // Masters as generated; the two WebP sizes are derived by scripts/genDerivedAssets.py.
+    // The count grows one approved image at a time.
+    ['street/actions/masters', '.png', 3],
+    ['street/actions', '.webp', 3],
+    ['street/actions/small', '.webp', 3],
 ];
 
 let verified = 0;

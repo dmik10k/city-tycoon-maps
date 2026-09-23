@@ -41,6 +41,9 @@ ASSETS = os.path.join(ROOT, "assets")
 COMPANIES_DIR = os.path.join(ASSETS, "buildings", "companies")
 THUMB_DIR = os.path.join(COMPANIES_DIR, "thumb")
 TUTORIAL_DIR = os.path.join(ASSETS, "tutorial")
+STREET_ACTIONS_DIR = os.path.join(ASSETS, "street", "actions")
+STREET_MASTERS_DIR = os.path.join(STREET_ACTIONS_DIR, "masters")
+STREET_SMALL_DIR = os.path.join(STREET_ACTIONS_DIR, "small")
 
 THUMB_WIDTH = 800
 
@@ -122,6 +125,61 @@ def build_tutorial_webp(quality, force):
     return len(sources)
 
 
+def cut_out_flat_background(im, thresh=24):
+    """Flat background -> alpha, flood-filled from the four corners (the creature-art method).
+
+    Only the region CONNECTED to a corner is cleared, so white highlights inside the object
+    survive; the art prompts ask for a dark outline so the fill cannot leak inward."""
+    from PIL import ImageDraw
+    im = im.convert("RGBA")
+    w, h = im.size
+    for corner in ((0, 0), (w - 1, 0), (0, h - 1), (w - 1, h - 1)):
+        if im.getpixel(corner)[3] != 0:
+            ImageDraw.floodfill(im, corner, (0, 0, 0, 0), thresh=thresh)
+    return im
+
+
+def square_padded(im, pad=0.06):
+    """Trim to the object, then pad back to a square so every icon sits at the same scale."""
+    box = im.getbbox()
+    if box:
+        im = im.crop(box)
+    side = round(max(im.size) * (1 + 2 * pad))
+    canvas = Image.new("RGBA", (side, side), (0, 0, 0, 0))
+    canvas.paste(im, ((side - im.width) // 2, (side - im.height) // 2), im)
+    return canvas
+
+
+def build_street_actions(quality, force):
+    """3. The Street's action art (tiles, confirm sheet, Record chips).
+
+    assets/street/actions/masters/<id>.png   (as generated, flat white or transparent)
+      -> assets/street/actions/<id>.webp        256x256, transparent (tiles and sheets)
+      -> assets/street/actions/small/<id>.webp   64x64, transparent (chips and rows)
+    """
+    if not os.path.isdir(STREET_MASTERS_DIR):
+        print("street:    no masters yet")
+        return 0
+    os.makedirs(STREET_SMALL_DIR, exist_ok=True)
+    sources = sorted(f for f in os.listdir(STREET_MASTERS_DIR) if f.endswith(".png"))
+    built = skipped = 0
+    for name in sources:
+        source = os.path.join(STREET_MASTERS_DIR, name)
+        stem = name[: -len(".png")]
+        big = os.path.join(STREET_ACTIONS_DIR, stem + ".webp")
+        small = os.path.join(STREET_SMALL_DIR, stem + ".webp")
+        if not is_stale(source, big, force) and not is_stale(source, small, force):
+            skipped += 1
+            continue
+        with Image.open(source) as im:
+            art = square_padded(cut_out_flat_background(im))
+            art.resize((256, 256), Image.LANCZOS).save(big, "WEBP", quality=max(quality, 88), method=6)
+            art.resize((64, 64), Image.LANCZOS).save(small, "WEBP", quality=max(quality, 88), method=6)
+        built += 1
+    print(f"street:    {built} built, {skipped} up to date ({len(sources)} total)")
+    return len(sources)
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--force", action="store_true", help="rebuild every variant")
@@ -130,6 +188,7 @@ def main():
 
     build_company_thumbs(args.quality, args.force)
     build_tutorial_webp(args.quality, args.force)
+    build_street_actions(args.quality, args.force)
 
 
 if __name__ == "__main__":
