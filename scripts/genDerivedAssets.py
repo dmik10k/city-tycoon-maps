@@ -125,10 +125,11 @@ def build_tutorial_webp(quality, force):
     return len(sources)
 
 
-def cut_out_flat_background(im, thresh=24):
+def cut_out_flat_background(im, thresh=70):
     """Flat background -> alpha, flood-filled from the four corners (the creature-art method).
 
-    Only the region CONNECTED to a corner is cleared, so white highlights inside the object
+    Tolerance 70, not the creature pipeline's 24: generators add a soft coloured glow round the
+    object, and 24 left it as a light halo. Only the region CONNECTED to a corner is cleared, so white highlights inside the object
     survive; the art prompts ask for a dark outline so the fill cannot leak inward."""
     from PIL import ImageDraw
     im = im.convert("RGBA")
