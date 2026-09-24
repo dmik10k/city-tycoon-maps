@@ -12,6 +12,19 @@ older than its source, so re-running this is cheap.
    covers a 2x display. The full-size original is still shipped and is fetched
    only when the player clicks a card open into the lightbox.
 
+     -> assets/buildings/companies/mini/<id>.webp    (240x120, ~5 KB)
+
+   The "Find a business" album shows every company at once as a ~90 CSS px card.
+   A decoded 800x400 thumb is ~1.3 MB of memory, so 193 of them (~250 MB) would
+   blow a phone's whole budget; the mini is ~115 KB decoded (~22 MB for all).
+
+2b. Building-side textures, small
+   assets/buildings/walls/<category>.webp  (1254x1254, the map's facade tiles)
+     -> assets/buildings/walls/small/<category>.webp  (512x512)
+
+   The album tiles a category's facade behind its page at ~150 CSS px a tile.
+   A 1254px texture decodes to ~6 MB for that; 512px is ~1 MB and still sharp.
+
 2. Tutorial guide portraits
    assets/tutorial/guide-<pose>.png  (RGBA PNG, 107-152 KB)
      -> assets/tutorial/guide-<pose>.webp
@@ -40,12 +53,16 @@ ASSETS = os.path.join(ROOT, "assets")
 
 COMPANIES_DIR = os.path.join(ASSETS, "buildings", "companies")
 THUMB_DIR = os.path.join(COMPANIES_DIR, "thumb")
+MINI_DIR = os.path.join(COMPANIES_DIR, "mini")
+WALLS_DIR = os.path.join(ASSETS, "buildings", "walls")
+WALLS_SMALL_DIR = os.path.join(WALLS_DIR, "small")
 TUTORIAL_DIR = os.path.join(ASSETS, "tutorial")
 STREET_ACTIONS_DIR = os.path.join(ASSETS, "street", "actions")
 STREET_MASTERS_DIR = os.path.join(STREET_ACTIONS_DIR, "masters")
 STREET_SMALL_DIR = os.path.join(STREET_ACTIONS_DIR, "small")
 
 THUMB_WIDTH = 800
+MINI_WIDTH = 240
 
 
 def is_stale(source, target, force):
@@ -59,8 +76,8 @@ def human(num_bytes):
     return f"{num_bytes / 1024:.0f} KB"
 
 
-def build_company_thumbs(quality, force):
-    os.makedirs(THUMB_DIR, exist_ok=True)
+def build_company_thumbs(quality, force, out_dir=THUMB_DIR, width=THUMB_WIDTH, label="thumbs"):
+    os.makedirs(out_dir, exist_ok=True)
     sources = sorted(f for f in os.listdir(COMPANIES_DIR) if f.endswith(".webp"))
 
     built = skipped = 0
@@ -68,7 +85,7 @@ def build_company_thumbs(quality, force):
 
     for name in sources:
         source = os.path.join(COMPANIES_DIR, name)
-        target = os.path.join(THUMB_DIR, name)
+        target = os.path.join(out_dir, name)
         src_bytes += os.path.getsize(source)
 
         if not is_stale(source, target, force):
@@ -78,8 +95,8 @@ def build_company_thumbs(quality, force):
 
         with Image.open(source) as im:
             im = im.convert("RGB")
-            height = max(1, round(im.height * THUMB_WIDTH / im.width))
-            im = im.resize((THUMB_WIDTH, height), Image.LANCZOS)
+            height = max(1, round(im.height * width / im.width))
+            im = im.resize((width, height), Image.LANCZOS)
             im.save(target, "WEBP", quality=quality, method=6)
 
         out_bytes += os.path.getsize(target)
@@ -88,8 +105,26 @@ def build_company_thumbs(quality, force):
     print(
         f"companies: {built} built, {skipped} up to date "
         f"({len(sources)} total) — {human(src_bytes)} full-size "
-        f"-> {human(out_bytes)} thumbs"
+        f"-> {human(out_bytes)} {label}"
     )
+    return len(sources)
+
+
+def build_wall_smalls(quality, force, size=512):
+    os.makedirs(WALLS_SMALL_DIR, exist_ok=True)
+    sources = sorted(f for f in os.listdir(WALLS_DIR) if f.endswith(".webp"))
+    built = skipped = 0
+    for name in sources:
+        source = os.path.join(WALLS_DIR, name)
+        target = os.path.join(WALLS_SMALL_DIR, name)
+        if not is_stale(source, target, force):
+            skipped += 1
+            continue
+        with Image.open(source) as im:
+            im = im.convert("RGB").resize((size, size), Image.LANCZOS)
+            im.save(target, "WEBP", quality=quality, method=6)
+        built += 1
+    print(f"walls:     {built} built, {skipped} up to date ({len(sources)} total) -> small/{size}px")
     return len(sources)
 
 
@@ -188,6 +223,8 @@ def main():
     args = parser.parse_args()
 
     build_company_thumbs(args.quality, args.force)
+    build_company_thumbs(min(args.quality, 75), args.force, MINI_DIR, MINI_WIDTH, "minis")
+    build_wall_smalls(args.quality, args.force)
     build_tutorial_webp(args.quality, args.force)
     build_street_actions(args.quality, args.force)
 
