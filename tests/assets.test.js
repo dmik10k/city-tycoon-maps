@@ -29,7 +29,7 @@ function assertImage(relativePath) {
 }
 
 const families = [
-    ['avatars', '.webp', 30],
+    ['avatars', '.webp', 34],
     ['buildings/companies', '.webp', 193],
     ['buildings/companies/thumb', '.webp', 193],
     ['buildings/walls', '.webp', 16],
