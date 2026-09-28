@@ -54,12 +54,12 @@ const families = [
     ['street/actions/masters', '.png', 11],
     ['street/actions', '.webp', 11],
     ['street/actions/small', '.webp', 11],
-    // Avatar frames: one ChatGPT sheet per group (free / achievement / paid) is the master;
-    // scripts/sliceFrames.py cuts it into frames normalized on the ring's hole. The counts
-    // grow one approved sheet at a time.
-    ['frames/masters', '.png', 3],
-    ['frames', '.webp', 31],
-    ['frames/small', '.webp', 31],
+    // Avatar frames: one ChatGPT sheet per image group (achievement / paid) is the master;
+    // scripts/sliceFrames.py cuts it into frames normalized on the ring's hole. Free frames
+    // have no image: the game draws them as a color ring.
+    ['frames/masters', '.png', 2],
+    ['frames', '.webp', 22],
+    ['frames/small', '.webp', 22],
 ];
 
 let verified = 0;

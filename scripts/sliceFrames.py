@@ -1,20 +1,26 @@
 #!/usr/bin/env python3
 """Slice one ChatGPT avatar-frame sheet into individual frames.
 
-    python3 scripts/sliceFrames.py --sheet <image> --group free \
-        --ids free-mint,free-navy,...        (reading order: left->right, top->bottom)
+    python3 scripts/sliceFrames.py --sheet <image> --group achievement --hole 0.56 \
+        --ids ach-civic,ach-commercial,...   (reading order: left->right, top->bottom)
 
 Writes
-    assets/frames/masters/<group>.png    the sheet as supplied (RGBA)
-    assets/frames/<id>.webp              512x512, alpha
-    assets/frames/small/<id>.webp        160x160, alpha (header avatar is ~67 CSS px)
+    assets/frames/masters/<group>.png    the sheet as supplied (RGBA, haze removed)
+    assets/frames/<id>.webp              512x512, alpha (the profile headers)
+    assets/frames/small/<id>.webp        160x160, alpha (the picker's 32 CSS px thumbs)
 
 Every frame is normalized on its HOLE, not its bounding box: the transparent disc in the
-middle is re-centered and scaled to HOLE_FRACTION of the canvas, so any frame lines up over
-the avatar identically however far its ornaments reach.
+middle is re-centered and scaled to --hole of the canvas, so any frame lines up over the
+avatar identically however far its ornaments reach. The game must draw it with the SAME
+number: ART[group].hole in the game repo's server_logic/profile/frameCatalogue.js.
+(v1, the first thick sheets, used 0.34; the thin v2 sheets use 0.56.)
 
 Background: real alpha is used as-is. A sheet without alpha must be flat #FF00FF and is
 chroma-keyed globally (a corner flood-fill would never reach a ring's enclosed hole).
+Either way, a frame is its solid art plus its anti-aliased edge: faint haze and speckles
+more than EDGE px from solid art are dropped. ChatGPT's "transparent" PNGs carry a faint
+halo around every ring and noise inside the holes, which would smudge the cream header
+and tint the photo under the frame.
 
 Requires Pillow + numpy.
 """
@@ -25,7 +31,8 @@ from collections import deque
 import numpy as np
 from PIL import Image
 
-HOLE_FRACTION = 0.34
+DEFAULT_HOLE = 0.56
+EDGE = 3
 SIZE = 512
 SMALL = 160
 ALPHA_ON = 24
@@ -151,8 +158,22 @@ def reading_order(boxes):
     return [b for r in rows for b in sorted(r, key=lambda b: b[0])]
 
 
+def fit_circle(xs, ys):
+    """Least-squares circle through points -> (cx, cy, r)."""
+    A = np.column_stack([xs, ys, np.ones_like(xs)])
+    (D, E, F), *_ = np.linalg.lstsq(A, -(xs ** 2 + ys ** 2), rcond=None)
+    cx, cy = -D / 2, -E / 2
+    return cx, cy, np.sqrt(cx ** 2 + cy ** 2 - F)
+
+
 def hole_of(mask, box):
-    """Flood the transparent region containing the box center -> (cx, cy, diameter)."""
+    """Flood the transparent region containing the box center -> (cx, cy, diameter).
+
+    The hole is the CIRCLE its outline follows, not its area: an ornament that dips into the
+    hole (a v2 achievement medallion reaches a quarter of the radius in at 12 o'clock) shrinks
+    the area and drags its centroid down, which left the photo small and low with slivers of
+    background at the ring's upper sides. So fit a circle to the outline, drop the points that
+    sit inside it (the intrusion), and refit."""
     x0, y0, x1, y1 = box
     sub = ~mask[y0:y1, x0:x1]
     cy, cx = (y1 - y0) // 2, (x1 - x0) // 2
@@ -160,16 +181,24 @@ def hole_of(mask, box):
         raise SystemExit(f'frame at {box}: center is not transparent (no hole?)')
     seen = np.zeros_like(sub)
     q = deque([(cy, cx)]); seen[cy, cx] = True
-    n = sy = sx = 0
     while q:
-        y, x = q.popleft(); n += 1; sy += y; sx += x
+        y, x = q.popleft()
         for dy, dx in ((1, 0), (-1, 0), (0, 1), (0, -1)):
             ny, nx = y + dy, x + dx
             if 0 <= ny < sub.shape[0] and 0 <= nx < sub.shape[1] and sub[ny, nx] and not seen[ny, nx]:
                 if ny in (0, sub.shape[0] - 1) or nx in (0, sub.shape[1] - 1):
                     raise SystemExit(f'frame at {box}: hole leaks to the outside (ring not closed)')
                 seen[ny, nx] = True; q.append((ny, nx))
-    return x0 + sx / n, y0 + sy / n, 2 * np.sqrt(n / np.pi)
+    inner = seen.copy()
+    inner[1:] &= seen[:-1]; inner[:-1] &= seen[1:]; inner[:, 1:] &= seen[:, :-1]; inner[:, :-1] &= seen[:, 1:]
+    ys, xs = np.nonzero(seen & ~inner)
+    xs, ys = xs + 0.5, ys + 0.5  # pixel centers
+    cx, cy, r = fit_circle(xs, ys)
+    for _ in range(4):
+        keep = np.hypot(xs - cx, ys - cy) > r * 0.98
+        cx, cy, r = fit_circle(xs[keep], ys[keep])
+    # the outline runs through the last hole pixels; the edge is half a pixel further out
+    return x0 + cx, y0 + cy, 2 * (r + 0.5)
 
 
 def main():
@@ -177,11 +206,13 @@ def main():
     ap.add_argument('--sheet', required=True)
     ap.add_argument('--group', required=True)
     ap.add_argument('--ids', required=True)
+    ap.add_argument('--hole', type=float, default=DEFAULT_HOLE)
     args = ap.parse_args()
     ids = [s.strip() for s in args.ids.split(',') if s.strip()]
 
     rgba = to_rgba(args.sheet)
     mask = rgba[..., 3] > SOLID  # solid art only: soft glows must not bridge two frames
+    rgba[..., 3] = np.where(dilate(mask, EDGE), rgba[..., 3], 0)
     boxes = reading_order(components(mask))
     if len(boxes) != len(ids):
         raise SystemExit(f'found {len(boxes)} frames, expected {len(ids)}')
@@ -193,7 +224,7 @@ def main():
 
     for fid, box in zip(ids, boxes):
         cx, cy, d = hole_of(mask, box)
-        side = d / HOLE_FRACTION
+        side = d / args.hole
         crop = (cx - side / 2, cy - side / 2, cx + side / 2, cy + side / 2)
         x0, y0, x1, y1 = box
         clipped = x0 < crop[0] or y0 < crop[1] or x1 > crop[2] or y1 > crop[3]
@@ -209,7 +240,8 @@ def main():
                                      keep.transform((SIZE, SIZE), Image.EXTENT, crop, Image.NEAREST)))
         out.save(os.path.join(ROOT, f'{fid}.webp'), 'WEBP', quality=90, method=6)
         out.resize((SMALL, SMALL), Image.LANCZOS).save(os.path.join(ROOT, 'small', f'{fid}.webp'), 'WEBP', quality=90, method=6)
-        print(f'{fid:22s} hole {d:6.1f}px  scale {SIZE / side:.3f}' + ('  WARNING: clipped at canvas edge' if clipped else ''))
+        print(f'{fid:22s} hole {d:6.1f}px  scale {SIZE / side:.3f}  (hole {args.hole} of canvas)'
+              + ('  WARNING: clipped at canvas edge' if clipped else ''))
 
 
 if __name__ == '__main__':
