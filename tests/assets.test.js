@@ -30,8 +30,11 @@ function assertImage(relativePath) {
 
 const families = [
     ['avatars', '.webp', 34],
-    ['buildings/companies', '.webp', 193],
+    // Only the two sizes the game requests are published. The 1774x887 originals live in
+    // the git-ignored buildings/companies/originals/ (the source genDerivedAssets.py cuts
+    // these from) and must NEVER be committed: jsDelivr refuses a repo over 50 MB.
     ['buildings/companies/thumb', '.webp', 193],
+    ['buildings/companies/mini', '.webp', 193],
     ['buildings/walls', '.webp', 16],
     ['buildings/walls_lit', '.webp', 96],
     ['tutorial', '.png', 9],
@@ -73,12 +76,14 @@ for (const [dir, extension, expected] of families) {
 // Derived variants must stay 1:1 with their sources — the game builds a thumb URL
 // from the company id alone, so a missing thumb is a broken card, not a fallback.
 // (scripts/genDerivedAssets.py regenerates both families.)
-const companyIds = files('buildings/companies', '.webp');
+const companyIds = files('buildings/companies/thumb', '.webp');
 assert.deepStrictEqual(
-    files('buildings/companies/thumb', '.webp'),
+    files('buildings/companies/mini', '.webp'),
     companyIds,
-    'every company image needs a matching thumb — run scripts/genDerivedAssets.py',
+    'every company thumb needs a matching mini — run scripts/genDerivedAssets.py',
 );
+assert.deepStrictEqual(files('buildings/companies', '.webp'), [],
+    'full-size company art belongs in the git-ignored originals/, not in the published folder');
 // A class with no face is a broken avatar, not a fallback — the card builds the face URL
 // from the class id alone. (Counts above stay at the number actually shipped; this is the
 // invariant that must hold at every count.)

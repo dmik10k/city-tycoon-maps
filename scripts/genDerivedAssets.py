@@ -5,12 +5,14 @@ Two families, both idempotent — a variant is only rebuilt when it is missing o
 older than its source, so re-running this is cheap.
 
 1. Company card thumbnails
-   assets/buildings/companies/<id>.webp   (1774x887, ~210 KB)
+   assets/buildings/companies/originals/<id>.webp   (1774x887, ~210 KB)
      -> assets/buildings/companies/thumb/<id>.webp   (800x400, ~35 KB)
 
    The card tile in the game renders at roughly 360 CSS px wide, so 800 px
-   covers a 2x display. The full-size original is still shipped and is fetched
-   only when the player clicks a card open into the lightbox.
+   covers a 2x display, and the picture viewer shows the thumb too. The
+   originals are NOT published (2026-09-29): `originals/` is git-ignored and
+   stays on disk only as the source for this script. jsDelivr refuses a repo
+   over 50 MB, and the originals were 41 MB of files the game never requested.
 
      -> assets/buildings/companies/mini/<id>.webp    (240x120, ~5 KB)
 
@@ -52,6 +54,8 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ASSETS = os.path.join(ROOT, "assets")
 
 COMPANIES_DIR = os.path.join(ASSETS, "buildings", "companies")
+# Sources for the two published sizes. Git-ignored: never pushed to the CDN.
+COMPANY_ORIGINALS_DIR = os.path.join(COMPANIES_DIR, "originals")
 THUMB_DIR = os.path.join(COMPANIES_DIR, "thumb")
 MINI_DIR = os.path.join(COMPANIES_DIR, "mini")
 WALLS_DIR = os.path.join(ASSETS, "buildings", "walls")
@@ -78,13 +82,13 @@ def human(num_bytes):
 
 def build_company_thumbs(quality, force, out_dir=THUMB_DIR, width=THUMB_WIDTH, label="thumbs"):
     os.makedirs(out_dir, exist_ok=True)
-    sources = sorted(f for f in os.listdir(COMPANIES_DIR) if f.endswith(".webp"))
+    sources = sorted(f for f in os.listdir(COMPANY_ORIGINALS_DIR) if f.endswith(".webp"))
 
     built = skipped = 0
     src_bytes = out_bytes = 0
 
     for name in sources:
-        source = os.path.join(COMPANIES_DIR, name)
+        source = os.path.join(COMPANY_ORIGINALS_DIR, name)
         target = os.path.join(out_dir, name)
         src_bytes += os.path.getsize(source)
 

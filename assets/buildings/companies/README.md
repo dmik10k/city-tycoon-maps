@@ -1,7 +1,13 @@
 # Company artwork (CDN)
 
-This directory is published through jsDelivr. Keep one **WebP** image per company
-here, named exactly `<companyId>.webp`.
+This directory is published through jsDelivr, but ONLY its two derived sizes:
+`thumb/<companyId>.webp` (800x400, every card and the picture viewer) and
+`mini/<companyId>.webp` (240x120, the "Find a business" album).
+
+The full-size original (1774x887) goes in `originals/<companyId>.webp`. That folder is
+**git-ignored and never pushed** (2026-09-29): the game never requests it, and jsDelivr
+refuses a repo over 50 MB. After adding or replacing an original, run
+`python3 scripts/genDerivedAssets.py` to cut the thumb and mini, then push those.
 
 These render on the company card when a player opens a building slot.
 
