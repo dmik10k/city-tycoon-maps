@@ -4,4 +4,7 @@ assets/buildings/companies/originals/
 # Emblem master sheets (2528x1696 RGBA PNG, ~5 MB each). NOT published: the game only
 # requests the 160px and 64px webp cuts. Kept on disk as sliceEmblems.py's source.
 assets/emblems/masters/
+# Street action masters (as-generated PNGs, 1-2 MB each). NOT published: the game only requests
+# the 256px and 64px webp. Kept on disk as genDerivedAssets.py's source.
+assets/street/actions/masters/
 .DS_Store

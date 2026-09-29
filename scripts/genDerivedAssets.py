@@ -194,6 +194,7 @@ def build_street_actions(quality, force):
     """3. The Street's action art (tiles, confirm sheet, Record chips).
 
     assets/street/actions/masters/<id>.png   (as generated, flat white or transparent)
+                                              (git-ignored, never pushed)
       -> assets/street/actions/<id>.webp        256x256, transparent (tiles and sheets)
       -> assets/street/actions/small/<id>.webp   64x64, transparent (chips and rows)
     """
