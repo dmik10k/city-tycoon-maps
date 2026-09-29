@@ -1,4 +1,7 @@
 # Full-size company art (1774x887). NOT published: the game only requests thumb/ and mini/.
 # Kept on disk as the source scripts/genDerivedAssets.py cuts those two sizes from.
 assets/buildings/companies/originals/
+# Emblem master sheets (2528x1696 RGBA PNG, ~5 MB each). NOT published: the game only
+# requests the 160px and 64px webp cuts. Kept on disk as sliceEmblems.py's source.
+assets/emblems/masters/
 .DS_Store

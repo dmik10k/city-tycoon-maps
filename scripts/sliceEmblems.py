@@ -10,6 +10,7 @@ reuses an id, never renames one.
 
 Writes
     assets/emblems/masters/sheet-<first>.png   the keyed sheet (RGBA)
+                                               (git-ignored, never pushed: 5 MB each)
     assets/emblems/<id>.webp                   160x160, alpha (the guild page)
     assets/emblems/small/<id>.webp             64x64, alpha (beside a name, the picker)
 
