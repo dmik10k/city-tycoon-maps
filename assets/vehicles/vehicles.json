@@ -1,0 +1,161 @@
+{
+ "pxPerTile": 300,
+ "sprites": [
+  {
+   "id": "sedan_white",
+   "kind": "car",
+   "weight": 4,
+   "height": 0.07,
+   "len": 0.4943,
+   "wid": 0.264,
+   "x": 137,
+   "y": 178,
+   "w": 148,
+   "h": 79
+  },
+  {
+   "id": "sedan_silver",
+   "kind": "car",
+   "weight": 3,
+   "height": 0.07,
+   "len": 0.4957,
+   "wid": 0.264,
+   "x": 288,
+   "y": 178,
+   "w": 149,
+   "h": 79
+  },
+  {
+   "id": "sedan_blue",
+   "kind": "car",
+   "weight": 2,
+   "height": 0.07,
+   "len": 0.5001,
+   "wid": 0.2655,
+   "x": 302,
+   "y": 90,
+   "w": 150,
+   "h": 80
+  },
+  {
+   "id": "hatch_red",
+   "kind": "car",
+   "weight": 1,
+   "height": 0.07,
+   "len": 0.4473,
+   "wid": 0.2655,
+   "x": 0,
+   "y": 178,
+   "w": 134,
+   "h": 80
+  },
+  {
+   "id": "suv_black",
+   "kind": "car",
+   "weight": 2,
+   "height": 0.09,
+   "len": 0.5133,
+   "wid": 0.286,
+   "x": 247,
+   "y": 0,
+   "w": 154,
+   "h": 86
+  },
+  {
+   "id": "compact_grey",
+   "kind": "car",
+   "weight": 2,
+   "height": 0.07,
+   "len": 0.4488,
+   "wid": 0.2596,
+   "x": 0,
+   "y": 261,
+   "w": 135,
+   "h": 78
+  },
+  {
+   "id": "van_white",
+   "kind": "car",
+   "weight": 1,
+   "height": 0.095,
+   "len": 0.5075,
+   "wid": 0.2831,
+   "x": 0,
+   "y": 90,
+   "w": 152,
+   "h": 85
+  },
+  {
+   "id": "taxi_yellow",
+   "kind": "car",
+   "weight": 1,
+   "height": 0.07,
+   "len": 0.4811,
+   "wid": 0.2684,
+   "x": 155,
+   "y": 90,
+   "w": 144,
+   "h": 81
+  },
+  {
+   "id": "pickup_white",
+   "kind": "car",
+   "weight": 1,
+   "height": 0.08,
+   "len": 0.5951,
+   "wid": 0.2588,
+   "x": 138,
+   "y": 261,
+   "w": 179,
+   "h": 78
+  },
+  {
+   "id": "bus_city",
+   "kind": "bus",
+   "weight": 1,
+   "height": 0.15,
+   "len": 1.1894,
+   "wid": 0.2531,
+   "x": 0,
+   "y": 342,
+   "w": 357,
+   "h": 76
+  },
+  {
+   "id": "truck_box",
+   "kind": "truck",
+   "weight": 1,
+   "height": 0.15,
+   "len": 0.8124,
+   "wid": 0.29,
+   "x": 0,
+   "y": 0,
+   "w": 244,
+   "h": 87
+  },
+  {
+   "id": "moto_red",
+   "kind": "moto",
+   "weight": 1,
+   "height": 0.04,
+   "len": 0.2533,
+   "wid": 0.1202,
+   "x": 360,
+   "y": 342,
+   "w": 76,
+   "h": 36
+  },
+  {
+   "id": "moto_black",
+   "kind": "moto",
+   "weight": 1,
+   "height": 0.04,
+   "len": 0.2551,
+   "wid": 0.1202,
+   "x": 0,
+   "y": 421,
+   "w": 77,
+   "h": 36
+  }
+ ]
+}
