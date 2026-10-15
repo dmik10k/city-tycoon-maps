@@ -36,6 +36,32 @@
       "entranceY": 50,
       "file": "maps/minimalistic.json",
       "description": "Small city with all possible companies"
+    },
+    {
+      "id": "stress-telaviv",
+      "name": "stress-telaviv",
+      "levelRequired": 1,
+      "version": 1,
+      "width": 1000,
+      "height": 1000,
+      "entranceX": 608,
+      "entranceY": 480,
+      "file": "maps/stress-telaviv.json.gz",
+      "description": "P2 stress test: Tel Aviv repeated over 1000 x 1000 tiles (2,361 buildings). Hidden, for speed testing.",
+      "hidden": true
+    },
+    {
+      "id": "stress-dense",
+      "name": "stress-dense",
+      "levelRequired": 1,
+      "version": 1,
+      "width": 1000,
+      "height": 1000,
+      "entranceX": 368,
+      "entranceY": 384,
+      "file": "maps/stress-dense.json.gz",
+      "description": "P2 stress test: the densest 1000 x 1000 map (11,685 buildings). Hidden, for speed testing.",
+      "hidden": true
     }
   ]
 }
