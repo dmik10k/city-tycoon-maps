@@ -11,7 +11,6 @@ jsDelivr serves the files from:
 - `assets/avatars/` — built-in player avatars
 - `assets/buildings/companies/` — company-card artwork
 - `assets/buildings/walls/` — daytime facade textures
-- `assets/buildings/walls_lit/` — night facade variants
 - `assets/tutorial/` — tutorial guide portraits
 - `assets/branding/` — logo, favicons, social icon, and editor showcase
 

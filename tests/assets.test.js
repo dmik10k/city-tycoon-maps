@@ -36,7 +36,8 @@ const families = [
     ['buildings/companies/thumb', '.webp', 193],
     ['buildings/companies/mini', '.webp', 193],
     ['buildings/walls', '.webp', 16],
-    ['buildings/walls_lit', '.webp', 96],
+    // buildings/walls_lit (96 night facade variants, 10.4 MB) was removed 2026-10-15: nothing in the game uses it
+    // since the 3D map engine (P1b), and the room is needed for big maps.
     ['tutorial', '.png', 9],
     ['tutorial', '.webp', 9],
     ['creatures', '.webp', 30],
