@@ -39,6 +39,24 @@
       "sha256": "cc2502d97e5d31131a0e7fea1d5352782a43d273801d0dfbc74ba1d382167dd4"
     },
     {
+      "mapKey": "stress-dense",
+      "file": "stress-dense.json",
+      "maxSteps": 30,
+      "metresPerCell": 7.5,
+      "claimable": 909,
+      "pairs": 1777,
+      "sha256": "a782f76b1d667aca51381eb59f167eaec67ac30dc4ccda6894579a79cb849822"
+    },
+    {
+      "mapKey": "stress-telaviv",
+      "file": "stress-telaviv.json",
+      "maxSteps": 30,
+      "metresPerCell": 7.5,
+      "claimable": 2240,
+      "pairs": 20278,
+      "sha256": "c9c0b9a3a388bdd18a4343dd0ed59677ea2e566f099e111344d27119139bca71"
+    },
+    {
       "mapKey": "Tel Aviv",
       "file": "Tel Aviv.json",
       "maxSteps": 30,
