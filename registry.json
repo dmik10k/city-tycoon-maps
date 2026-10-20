@@ -62,6 +62,19 @@
       "file": "maps/stress-dense.json.gz",
       "description": "P2 stress test: the densest 1000 x 1000 map (11,685 buildings). Hidden, for speed testing.",
       "hidden": true
+    },
+    {
+      "id": "stress-st",
+      "name": "stress-st",
+      "levelRequired": 1,
+      "version": 1,
+      "width": 1000,
+      "height": 1000,
+      "entranceX": 800,
+      "entranceY": 608,
+      "file": "maps/stress-st.json.gz",
+      "description": "P4 stress test: the starter map repeated over 1000 x 1000 tiles (3,620 buildings). Hidden, for the phone run.",
+      "hidden": true
     }
   ]
 }
